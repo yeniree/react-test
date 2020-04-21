@@ -1,0 +1,26 @@
+.cluster {
+  cursor: pointer;
+
+  .center {
+    text-align: center;
+  }
+  .cluster-info {
+    padding: 20px 0;
+
+    .price {
+      bottom: 10px;
+      display: flex;
+      font-size: 20px;
+      position: relative;
+
+      .freeShipping {
+        background-image: url("../../../assets/ic_shipping.png");
+        background-repeat: no-repeat;
+        left: 8px;
+        position: relative;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+@import "./styles/variables";
+@import "./styles/grid/grid";
+
+body {
+  margin: 0;
+  background-color: $background;
+  color: $font-color;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+.fieldset {
+  background: $white-color;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  width: 100%;
+  padding: 0.625em 0.75em;
+}
+input {
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  line-height: 1.15;
+  width: 100%;
+}
+.breadcrumb {
+  color: $gray-color;
+  font-weight: 400;
+  margin: 16px 0;
+}
+.cluster-container {
+  background: $white-color;
+  border-radius: 8px;
+}
+a {
+  color: $font-color;
+  &:link {
+    text-decoration: none;
+  }
+
+  &:visited {
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:active {
+    text-decoration: none;
+  }
+}

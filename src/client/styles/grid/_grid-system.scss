@@ -1,0 +1,243 @@
+/// Makes an element a container
+/// @group Grid System
+/// @access private
+/// @param {size} $container-max-width [none] - max width del contenedor. Ej.: "1024px", "90em" o "100%"
+@mixin make-me-container($container-max-width) {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: $container-max-width;
+}
+
+/// Makes an element a row
+/// @group Grid System
+/// @access private
+/// @param {size} $row-gutter [0] - Si el tamano es el mismo que la separacion entre columnas la primera columna coincidira con el borde del contenedor, si es "0" las columnas se separaran del borde del contenedor al igual que entre si.
+@mixin make-me-row() {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
+  width: 100%;
+}
+
+/// Common styles for columns
+/// @group Grid System
+/// @access private
+/// @todo hacer algun hack para poner esto en placeholder que pueda ir dentro de un mediaquery
+@mixin column-common($column-gutter) {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  padding: 0 ($column-gutter / 2);
+}
+
+/// Makes an element a column
+/// @group Grid System
+/// @access private
+/// @param {Num} $column-count [none] - Column range (N of X)
+/// @param {Num} $column-total [none] - Total columns in the grid (X)
+/// @param {size} $column-gutter [none] - Total gap between columns. IE: 16px (8px +8px)
+@mixin make-me-column($column-count, $column-total, $column-gutter) {
+  @include column-common($column-gutter);
+
+  // flex-basis: (($column-count * 100) / $column-total) * 1%;
+  width: (($column-count * 100) / $column-total) * 1%;
+}
+
+///////// GENERATORS /////////
+
+/// Row Generator
+/// @group Grid System
+/// @access private
+/// @param {string} $row-prefix [none] - Row prefix (first part of the selector)
+/// @param {string} $row-name[none] - Row name
+/// @param {map} row-gutter [none] - Row gutter
+@mixin make-row($row-prefix, $row-name) {
+  .#{$row-prefix}-#{$row-name} {
+    @include make-me-row();
+  }
+}
+
+/// Containers Generator
+/// @group Grid System
+/// @access private
+/// @param {string} $container-prefix [none] - Container prefix (first part of the selector)
+/// @param {string} $container-name[none] - Container name  (mid part of the selector)
+/// @param {map} $container-sizes-map [none] - Map of last part of the selector and container widths IE.: ('-xxl': 1344px, '-sm': 768px)
+@mixin make-containers(
+  $container-prefix,
+  $container-name,
+  $container-sizes-map
+) {
+  @each $container-size-name, $container-sizes-width in $container-sizes-map {
+    @if $container-size-name != "" {
+      .#{$container-prefix}-#{$container-name}-#{$container-size-name} {
+        @include make-me-container($container-sizes-width);
+      }
+    } @else {
+      .#{$container-prefix}-#{$container-name} {
+        @include make-me-container($container-sizes-width);
+      }
+    }
+  }
+}
+
+/// Columns Generator
+/// @group Grid System
+/// @access private
+/// @param {string} $column-name [none] - Name is the first part of selector. IE 'col'
+/// @param {Num} $column-total [none] - Total columns in the grid (X)
+/// @param {size} $column-gutter [none] - Total gap between columns. IE: 16px (8px +8px)
+/// @param {size} $modifier [''] - Selector's sufix. Is useful for responsive grids
+@mixin make-columns(
+  $column-name,
+  $column-total,
+  $column-gutter,
+  $modifier: ""
+) {
+  $i: 1;
+
+  [class^="#{$column-name}-"],
+  .#{$column-name}-auto {
+    @include column-common($column-gutter);
+  }
+
+  @for $i from 1 through $column-total {
+    .#{$column-name}-#{$i}#{$modifier} {
+      width: (($i * 100) / $column-total) * 1%;
+    }
+  }
+}
+
+/// Responsive columns system Generator
+/// @group Grid System
+/// @access private
+/// @param {string} $column-name [none] - Name is the first part of selector. IE 'col'
+/// @param {Num} $column-total [none] - Total columns in the grid (X)
+/// @param {size} $column-gutter [none] - Total gap between columns. IE: 16px (8px +8px)
+/// @param {map} $modifier [''] - Map of device's sufix and device's breackpoints in px
+@mixin make-grid-responsive(
+  $column-name,
+  $column-total,
+  $column-gutter,
+  $device-map
+) {
+  $i: 1;
+
+  [class^="#{$column-name}-"] {
+    @include column-common($column-gutter);
+  }
+
+  @each $device-name, $device-size in $device-map {
+    @media (min-width: ($device-size - 1)) {
+      @include make-columns(
+        $column-name,
+        $column-total,
+        $column-gutter,
+        -#{$device-name}
+      );
+      @include make-columns-offset(
+        $column-name,
+        $column-total,
+        -#{$device-name}
+      );
+      display: inline-grid;
+    }
+  }
+
+  .#{$column-name}-hide {
+    display: none;
+  }
+
+  @each $device-name, $device-size in $device-map {
+    @media (min-width: ($device-size - 1)) {
+      .#{$column-name}-hide-#{$device-name} {
+        display: none;
+      }
+    }
+  }
+}
+
+/// Offset generator
+/// @group Grid System
+/// @access private
+/// @param {string} $column-name [none] - Name is the first part of selector. IE 'col'
+/// @param {Num} $column-total [none] - Total columns in the grid (X)
+/// @param {size} $modifier [''] - Selector's sufix. Is useful for responsive grids
+@mixin make-columns-offset($column-name, $column-total, $modifier: "") {
+  $i: 1;
+
+  @for $i from 1 through ($column-total - 1) {
+    .#{$column-name}-offset-#{$i}#{$modifier} {
+      margin-left: (($i * 100) / $column-total) * 1%;
+    }
+  }
+}
+
+/// Utils
+/// Order
+/// @group Grid System
+/// @access private
+@mixin row-reverse {
+  flex-direction: row-reverse;
+}
+
+@mixin column-first {
+  order: -1;
+}
+
+@mixin column-last {
+  order: 1;
+}
+
+/// Aligment
+/// @group Grid System
+/// @access private
+/// @param {string} $aling [none] - 'start', 'center', 'end' 'top','middle','bottom' and stretch
+@mixin row-align($aling) {
+  @if $aling== "start" {
+    justify-content: flex-start;
+    text-align: start;
+  }
+
+  @if $aling== "center" {
+    justify-content: center;
+    text-align: center;
+  }
+
+  @if $aling== "end" {
+    justify-content: flex-end;
+    text-align: end;
+  }
+
+  @if $aling== "top" {
+    align-items: flex-start;
+  }
+
+  @if $aling== "middle" {
+    align-items: center;
+  }
+
+  @if $aling== "bottom" {
+    align-items: flex-end;
+  }
+
+  @if $aling== "stretch" {
+    align-items: stretch;
+  }
+}
+
+/// Distribution
+/// @group Grid System
+/// @access private
+/// @param {string} $dist [none] - 'around' and 'between'
+@mixin row-distribution($dist) {
+  @if $dist== "around" {
+    justify-content: space-around;
+  }
+
+  @if $dist== "between" {
+    justify-content: space-between;
+  }
+}

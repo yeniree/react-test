@@ -1,0 +1,22 @@
+@import "../../styles/variables";
+
+.search {
+  background-color: $yellow-color;
+  padding: 10px 0;
+  .image {
+    background-image: url("../../assets/Logo_ML.png");
+    height: 36px;
+    width: 53px;
+  }
+  button {
+    background: $white-color;
+    border: none;
+
+    &.icon-search {
+      background-image: url("../../assets/ic_Search.png");
+      background-repeat: no-repeat;
+      height: 18px;
+      width: 18px;
+    }
+  }
+}

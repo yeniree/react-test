@@ -1,0 +1,32 @@
+@import "../../styles/variables";
+
+.detail {
+  background: $white-color;
+  margin-top: 16px;
+
+  .image {
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 80%;
+    }
+  }
+  .detail-info {
+    margin: 16px 0;
+    .price {
+      margin: 32px 0;
+    }
+
+    button {
+      background: $blue-color;
+      color: $white-color;
+      padding: 16px 0;
+      width: 100%;
+      border: 0;
+      border-radius: 4px;
+    }
+  }
+  .description {
+    padding: 32px;
+  }
+}
