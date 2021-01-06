@@ -19,7 +19,7 @@
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/react-router-dom": "^5.1.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.3",
     "http-status-codes": "^1.4.0",
